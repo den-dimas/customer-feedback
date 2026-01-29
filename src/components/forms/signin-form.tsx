@@ -11,17 +11,17 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { RegisterInput, registerSchema } from "@/schemas/auth";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useTransition } from "react";
-import { signUp } from "@/actions/auth";
-import { PasswordWithEye } from "@/components/inputs/password-with-eye";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { LoginInput, loginSchema } from "@/schemas/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "@/actions/auth";
+import { toast } from "sonner";
+import { PasswordWithEye } from "../inputs/password-with-eye";
 import { Loader2 } from "lucide-react";
 
-export function SignupForm({
+export function SignInForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
@@ -32,37 +32,28 @@ export function SignupForm({
     register,
     handleSubmit,
     setError,
+    clearErrors,
     formState: { errors },
-  } = useForm<RegisterInput>({
-    resolver: zodResolver(registerSchema),
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
     mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
-      passwordConfirmation: "",
     },
   });
 
-  const onSubmit = (data: RegisterInput) => {
+  const onSubmit = (data: LoginInput) => {
     startTransition(async () => {
       try {
-        const result = await signUp(data);
+        const result = await signIn(data);
 
         if (!result.success) {
           if (result.error) {
-            if (result.error.message.toLowerCase().includes("password")) {
-              setError("password", {
-                type: "server",
-                message: result.error.message,
-              });
-              setError("passwordConfirmation", {
-                type: "server",
-                message: result.error.message,
-              });
-            } else {
+            if (result.error.message == "Invalid login credentials") {
               setError("email", {
                 type: "invalid",
-                message: result.error.message,
+                message: "Wrong email/password.",
               });
             }
           } else {
@@ -71,8 +62,8 @@ export function SignupForm({
           return;
         }
 
-        toast.success("Account created successfully!");
-        router.push("/auth/signup/email-confirmation");
+        toast.success("Sign In Successfull!");
+        router.push("/dashboard");
       } catch (error) {
         toast.error("Something went wrong. Please try again.");
       }
@@ -87,9 +78,10 @@ export function SignupForm({
     >
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Create your account</h1>
+          <h1 className="text-2xl font-bold">Login to your account</h1>
+
           <p className="text-muted-foreground text-sm text-balance">
-            Fill in the form below to create your account
+            Enter your email below to login to your account
           </p>
         </div>
 
@@ -103,53 +95,35 @@ export function SignupForm({
             required
             autoComplete="email"
             disabled={isPending}
+            onChange={() => clearErrors()}
           />
 
-          {!errors.email ? (
-            <FieldDescription>
-              We&apos;ll use this to contact you. We will not share your email
-              with anyone else.
-            </FieldDescription>
-          ) : (
-            <FieldError>{errors.email.message}</FieldError>
-          )}
+          {errors.email && <FieldError>{errors.email.message}</FieldError>}
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="password">Password</FieldLabel>
+          <div className="flex items-center">
+            <FieldLabel htmlFor="password">Password</FieldLabel>
+            <a
+              href="#"
+              className="ml-auto text-sm underline-offset-4 hover:underline"
+              tabIndex={-1}
+            >
+              Forgot your password?
+            </a>
+          </div>
 
           <PasswordWithEye
             {...register("password")}
             id="password"
             required
-            autoComplete="new-password"
+            autoComplete="password"
             disabled={isPending}
+            onChange={() => clearErrors()}
           />
 
-          {!errors.password ? (
-            <FieldDescription>
-              Must be at least 8 characters long.
-            </FieldDescription>
-          ) : (
+          {errors.password && (
             <FieldError>{errors.password.message}</FieldError>
-          )}
-        </Field>
-
-        <Field>
-          <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
-
-          <PasswordWithEye
-            {...register("passwordConfirmation")}
-            id="confirm-password"
-            required
-            autoComplete="new-password"
-            disabled={isPending}
-          />
-
-          {!errors.passwordConfirmation ? (
-            <FieldDescription>Please confirm your password.</FieldDescription>
-          ) : (
-            <FieldError>{errors.passwordConfirmation.message}</FieldError>
           )}
         </Field>
 
@@ -157,20 +131,15 @@ export function SignupForm({
           <Button
             type="submit"
             className="w-full transition-all active:scale-95 disabled:pointer-events-none"
-            disabled={
-              isPending ||
-              !!errors.email ||
-              !!errors.password ||
-              !!errors.passwordConfirmation
-            }
+            disabled={isPending || !!errors.email || !!errors.password}
           >
             {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Creating account...
+                Signin In...
               </>
             ) : (
-              "Create Account"
+              "Sign In"
             )}
           </Button>
         </Field>
@@ -178,8 +147,11 @@ export function SignupForm({
         <FieldSeparator></FieldSeparator>
 
         <Field>
-          <FieldDescription className="px-6 text-center">
-            Already have an account? <a href="/auth/signin">Sign in</a>
+          <FieldDescription className="text-center">
+            Don&apos;t have an account?{" "}
+            <a href="/auth/signup" className="underline underline-offset-4">
+              Sign up
+            </a>
           </FieldDescription>
         </Field>
       </FieldGroup>
