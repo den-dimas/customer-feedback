@@ -1,0 +1,214 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "useCustomSchema": true,
+        "operation": "update",
+        "tableId": "feedbacks",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $json.body.record.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "priority",
+              "fieldValue": "Low"
+            },
+            {
+              "fieldId": "category",
+              "fieldValue": "General"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "Processed"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        416,
+        96
+      ],
+      "id": "008413ec-aa41-4a60-9ee9-7eabbf796ea6",
+      "name": "Low and General feedback",
+      "credentials": {
+        "supabaseApi": {
+          "id": "elNPpV2bHS3hkBzm",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "useCustomSchema": true,
+        "operation": "update",
+        "tableId": "feedbacks",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('New Feedback trigger').item.json.body.record.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "priority",
+              "fieldValue": "High"
+            },
+            {
+              "fieldId": "category",
+              "fieldValue": "Bug"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "Processed"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        416,
+        -96
+      ],
+      "id": "9b47b188-88bc-4da6-aa30-cf7b5454c06c",
+      "name": "High and Bug feedback",
+      "credentials": {
+        "supabaseApi": {
+          "id": "elNPpV2bHS3hkBzm",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "73bddf01-6207-4552-a3f4-e1336b3b1288",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "04a41222-1bb2-48b8-bd09-40d335c1cae3",
+      "name": "New Feedback trigger",
+      "webhookId": "73bddf01-6207-4552-a3f4-e1336b3b1288",
+      "notesInFlow": false,
+      "retryOnFail": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0bdb852f-eccc-451b-b420-a337f7c9e3c0",
+              "leftValue": "={{ $json.body.record.description }}",
+              "rightValue": "error",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "1cfa7809-adf7-4a32-9362-b7aee14be29e",
+              "leftValue": "={{ $json.body.record.description }}",
+              "rightValue": "bug",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "e9829f50-6e3f-424e-8dcf-922cd326b8e2",
+              "leftValue": "={{ $json.body.record.description }}",
+              "rightValue": "urgent",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "93d67691-5c30-430c-80a9-da7b5e38aafe",
+      "name": "Error, Bug, Urgent?",
+      "alwaysOutputData": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "New Feedback trigger": {
+      "main": [
+        [
+          {
+            "node": "Error, Bug, Urgent?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error, Bug, Urgent?": {
+      "main": [
+        [
+          {
+            "node": "High and Bug feedback",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Low and General feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "8a354252-a2ae-4912-a5b9-5c21025118b0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "87d3404380e9d613c4edb959971bdf577b04258155edb9476a606a658a932a79"
+  },
+  "id": "FwzXHBrR5tNV_EqEuapDs",
+  "tags": []
+}
