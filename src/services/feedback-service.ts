@@ -1,9 +1,5 @@
 import { db } from "@/lib/db";
-import {
-  feedbackTable,
-  SelectFeedback,
-  type InsertFeedback,
-} from "@/lib/db/schema";
+import { feedbackTable, type InsertFeedback } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 export async function createFeedback(data: InsertFeedback) {

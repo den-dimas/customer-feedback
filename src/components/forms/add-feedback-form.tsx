@@ -4,11 +4,9 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-  FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -51,7 +49,10 @@ export function AddFeedbackForm({
           if (result.error) {
             setError("root", {
               type: "invalid",
-              message: result.error,
+              message:
+                typeof result.error === "string"
+                  ? result.error
+                  : JSON.stringify(result.error),
             });
           } else {
             toast.error("An unexpected error occurred.");
@@ -61,7 +62,7 @@ export function AddFeedbackForm({
 
         toast.success("Feedback created.");
         if (onSuccess) onSuccess();
-      } catch (error) {
+      } catch {
         toast.error("Something went wrong. Please try again.");
       }
     });

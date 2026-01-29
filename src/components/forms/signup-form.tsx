@@ -18,7 +18,6 @@ import { useTransition } from "react";
 import { signUp } from "@/actions/auth";
 import { PasswordWithEye } from "@/components/inputs/password-with-eye";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
 export function SignupForm({
@@ -26,7 +25,6 @@ export function SignupForm({
   ...props
 }: React.ComponentProps<"form">) {
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
 
   const {
     register,
@@ -74,7 +72,7 @@ export function SignupForm({
         toast.success(
           "We've sent you a confirmation email, please check your inbox.",
         );
-      } catch (error) {
+      } catch {
         toast.error("Something went wrong. Please try again.");
       }
     });

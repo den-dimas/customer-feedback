@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { LoginInput, loginSchema } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,7 +25,6 @@ export function SignInForm({
   ...props
 }: React.ComponentProps<"form">) {
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
 
   const {
     register,
@@ -49,23 +47,22 @@ export function SignInForm({
         const result = await signIn(data);
 
         if (!result.success) {
-          if (result.error) {
-            if (result.error.message == "Invalid login credentials") {
-              setError("email", {
-                type: "invalid",
-                message: "Wrong email/password.",
-              });
-            }
+          if (result.error?.message === "Invalid login credentials") {
+            setError("email", {
+              type: "invalid",
+              message: "Wrong email/password.",
+            });
           } else {
-            toast.error(result.error || "An unexpected error occurred.");
+            toast.error(
+              result.error?.message || "An unexpected error occurred.",
+            );
           }
           return;
         }
 
-        toast.success("Sign In Successfull!");
-        router.push("/dashboard");
-      } catch (error) {
-        toast.error("Something went wrong. Please try again.");
+        toast.success("Sign In Successful!");
+      } catch {
+        // toast.error("Something went wrong. Please try again.");
       }
     });
   };
@@ -92,14 +89,15 @@ export function SignInForm({
             Email
           </FieldLabel>
           <Input
-            {...register("email")}
+            {...register("email", {
+              onChange: () => clearErrors(),
+            })}
             id="email"
             type="email"
             placeholder="m@example.com"
             required
             autoComplete="email"
             disabled={isPending}
-            onChange={() => clearErrors()}
             className="mt-1.5"
           />
 
@@ -111,22 +109,23 @@ export function SignInForm({
             <FieldLabel htmlFor="password" className="text-sm font-medium">
               Password
             </FieldLabel>
-            <a
+            {/* <a
               href="#"
               className="text-xs text-primary hover:text-primary/80 underline-offset-4 hover:underline transition-colors"
               tabIndex={-1}
             >
               Forgot password?
-            </a>
+            </a> */}
           </div>
 
           <PasswordWithEye
-            {...register("password")}
+            {...register("password", {
+              onChange: () => clearErrors(),
+            })}
             id="password"
             required
             autoComplete="password"
             disabled={isPending}
-            onChange={() => clearErrors()}
             className="mt-1.5"
           />
 

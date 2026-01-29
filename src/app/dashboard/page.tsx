@@ -1,9 +1,9 @@
 import { MessageSquare, Plus } from "lucide-react";
 import { getFeedbacks } from "@/actions/feedback";
-import { FeedbackCard } from "@/components/feedback-card";
 import { AddFeedbackModal } from "@/components/modals/add-feedback-modal";
 import { Button } from "@/components/ui/button";
 import { FeedbackList } from "@/components/feedback-list";
+import { LogoutButton } from "@/components/logout-button";
 
 export default async function Dashboard() {
   const feedbacks = await getFeedbacks();
@@ -27,12 +27,16 @@ export default async function Dashboard() {
               </div>
             </div>
 
-            <AddFeedbackModal>
-              <Button suppressHydrationWarning>
-                <Plus className="w-4 h-4" />
-                New Feedback
-              </Button>
-            </AddFeedbackModal>
+            <div className="flex gap-2">
+              <AddFeedbackModal>
+                <Button suppressHydrationWarning>
+                  <Plus className="w-4 h-4" />
+                  New Feedback
+                </Button>
+              </AddFeedbackModal>
+
+              <LogoutButton />
+            </div>
           </div>
         </div>
       </div>

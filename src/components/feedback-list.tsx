@@ -4,7 +4,7 @@ import { MessageSquare, Plus } from "lucide-react";
 import { AddFeedbackModal } from "./modals/add-feedback-modal";
 import { FeedbackCard } from "./feedback-card";
 import { getFeedbacks } from "@/actions/feedback";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SelectFeedback } from "@/lib/db/schema";
 import { createClient } from "@/lib/supabase/client";
 
@@ -26,7 +26,7 @@ export function FeedbackList({ data }: { data: SelectFeedback[] }) {
 
         setFeedbacks([]);
         return;
-      } catch (error) {}
+      } catch {}
     };
 
     const subscribe = async () => {
@@ -43,12 +43,10 @@ export function FeedbackList({ data }: { data: SelectFeedback[] }) {
       });
 
       channel.on("broadcast", { event: "INSERT" }, () => {
-        console.log("inserted");
         query();
       });
 
       channel.on("broadcast", { event: "UPDATE" }, () => {
-        console.log("updated");
         query();
       });
 
@@ -63,7 +61,7 @@ export function FeedbackList({ data }: { data: SelectFeedback[] }) {
         supabase.removeChannel(channelRef.current);
       }
     };
-  }, []);
+  }, [supabase]);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8">

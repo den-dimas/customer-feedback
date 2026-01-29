@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
-import { motion } from "framer-motion";
+import { motion, type HTMLMotionProps } from "framer-motion";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
@@ -20,8 +20,7 @@ const buttonVariants = cva(
           "border-2 border-border bg-background hover:bg-accent hover:text-accent-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80 border-2 border-secondary",
-        ghost:
-          "hover:bg-accent hover:text-accent-foreground",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
@@ -42,32 +41,41 @@ const buttonVariants = cva(
   },
 );
 
+type ButtonProps = Omit<HTMLMotionProps<"button">, "className"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+    className?: string;
+  };
+
 function Button({
   className,
   variant = "default",
   size = "default",
   asChild = false,
   ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
-  }) {
-  const Comp = asChild ? Slot : motion.button;
+}: ButtonProps) {
+  if (asChild) {
+    return (
+      <Slot
+        data-slot="button"
+        data-variant={variant}
+        data-size={size}
+        className={cn(buttonVariants({ variant, size, className }))}
+        {...(props as React.ComponentProps<typeof Slot>)}
+      />
+    );
+  }
 
   return (
-    <Comp
+    <motion.button
       data-slot="button"
       data-variant={variant}
       data-size={size}
       className={cn(buttonVariants({ variant, size, className }))}
-      {...(!asChild
-        ? {
-            whileHover: { scale: 1.02, opacity: 0.9 },
-            whileTap: { scale: 0.95 },
-            transition: { type: "spring", stiffness: 400, damping: 10 },
-          }
-        : {})}
-      {...(props as any)}
+      whileHover={{ scale: 1.02, opacity: 0.9 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+      {...props}
     />
   );
 }

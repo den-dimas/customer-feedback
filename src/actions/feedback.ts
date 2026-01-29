@@ -31,7 +31,7 @@ export async function addFeedback(input: AddFeedbackInput) {
 
     return Success(result[0]);
   } catch (error) {
-    return Error<any>(error);
+    return Error(error);
   }
 }
 
@@ -49,6 +49,6 @@ export async function getFeedbacks() {
 
     return Success(result);
   } catch (error) {
-    return Error<any>(error);
+    return Error(error);
   }
 }

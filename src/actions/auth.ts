@@ -8,12 +8,15 @@ import {
   registerSchema,
 } from "@/schemas/auth";
 import { Error, Success } from "@/types/response";
+import { redirect } from "next/navigation";
 
 export async function signUp(input: RegisterInput) {
   const register = registerSchema.safeParse(input);
 
   if (!register.success) {
-    return Error(register.error);
+    return Error({
+      message: register.error.issues[0]?.message || "Validation failed",
+    });
   }
 
   const supabase = await createClient();
@@ -27,7 +30,7 @@ export async function signUp(input: RegisterInput) {
   });
 
   if (error != null) {
-    return Error(error);
+    return Error({ message: error.message });
   }
 
   if (data.user?.identities?.length == 0) {
@@ -41,21 +44,23 @@ export async function signIn(input: LoginInput) {
   const login = loginSchema.safeParse(input);
 
   if (!login.success) {
-    return Error(login.error);
+    return Error({
+      message: login.error.issues[0]?.message || "Validation failed",
+    });
   }
 
   const supabase = await createClient();
 
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { error } = await supabase.auth.signInWithPassword({
     email: login.data.email,
     password: login.data.password,
   });
 
   if (error != null) {
-    return Error(error);
+    return Error({ message: error.message });
   }
 
-  return Success(data);
+  redirect("/dashboard");
 }
 
 export async function signOut() {
@@ -64,7 +69,7 @@ export async function signOut() {
   const { error } = await supabase.auth.signOut();
 
   if (error != null) {
-    return Error(error);
+    return Error({ message: error.message });
   }
 
   return Success(null);

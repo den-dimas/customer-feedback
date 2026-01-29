@@ -20,12 +20,12 @@ export default async function ConfirmPage() {
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10 animate-fade-in">
         <div className="flex justify-center gap-2 md:justify-start">
-          <a href="/" className="flex items-center gap-3 font-medium group">
+          <Link href="/" className="flex items-center gap-3 font-medium group">
             <div className="bg-primary text-primary-foreground flex size-10 items-center justify-center rounded-lg border-2 border-primary">
               <Sparkles className="size-5" />
             </div>
             <span className="text-xl font-heading font-bold">Outbound</span>
-          </a>
+          </Link>
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-sm flex flex-col items-center text-center space-y-6">
