@@ -77,16 +77,20 @@ export function SignInForm({
       {...props}
     >
       <FieldGroup>
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Login to your account</h1>
+        <div className="flex flex-col gap-2 text-center mb-2">
+          <h1 className="text-3xl font-bold font-heading tracking-tight">
+            Welcome Back
+          </h1>
 
-          <p className="text-muted-foreground text-sm text-balance">
-            Enter your email below to login to your account
+          <p className="text-muted-foreground text-sm">
+            Enter your credentials to access your account
           </p>
         </div>
 
         <Field>
-          <FieldLabel htmlFor="email">Email</FieldLabel>
+          <FieldLabel htmlFor="email" className="text-sm font-medium">
+            Email
+          </FieldLabel>
           <Input
             {...register("email")}
             id="email"
@@ -96,20 +100,23 @@ export function SignInForm({
             autoComplete="email"
             disabled={isPending}
             onChange={() => clearErrors()}
+            className="mt-1.5"
           />
 
           {errors.email && <FieldError>{errors.email.message}</FieldError>}
         </Field>
 
         <Field>
-          <div className="flex items-center">
-            <FieldLabel htmlFor="password">Password</FieldLabel>
+          <div className="flex items-center justify-between">
+            <FieldLabel htmlFor="password" className="text-sm font-medium">
+              Password
+            </FieldLabel>
             <a
               href="#"
-              className="ml-auto text-sm underline-offset-4 hover:underline"
+              className="text-xs text-primary hover:text-primary/80 underline-offset-4 hover:underline transition-colors"
               tabIndex={-1}
             >
-              Forgot your password?
+              Forgot password?
             </a>
           </div>
 
@@ -120,6 +127,7 @@ export function SignInForm({
             autoComplete="password"
             disabled={isPending}
             onChange={() => clearErrors()}
+            className="mt-1.5"
           />
 
           {errors.password && (
@@ -127,16 +135,16 @@ export function SignInForm({
           )}
         </Field>
 
-        <Field>
+        <Field className="mt-2">
           <Button
             type="submit"
-            className="w-full transition-all active:scale-95 disabled:pointer-events-none"
+            className="w-full h-11 rounded-xl font-medium"
             disabled={isPending || !!errors.email || !!errors.password}
           >
             {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Signin In...
+                Signing In...
               </>
             ) : (
               "Sign In"
@@ -147,9 +155,12 @@ export function SignInForm({
         <FieldSeparator></FieldSeparator>
 
         <Field>
-          <FieldDescription className="text-center">
+          <FieldDescription className="text-center text-sm">
             Don&apos;t have an account?{" "}
-            <a href="/auth/signup" className="underline underline-offset-4">
+            <a
+              href="/auth/signup"
+              className="text-primary font-medium hover:text-primary/80 underline-offset-4 hover:underline transition-colors"
+            >
               Sign up
             </a>
           </FieldDescription>

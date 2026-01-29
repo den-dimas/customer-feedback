@@ -86,15 +86,19 @@ export function SignupForm({
       {...props}
     >
       <FieldGroup>
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Create your account</h1>
-          <p className="text-muted-foreground text-sm text-balance">
-            Fill in the form below to create your account
+        <div className="flex flex-col gap-2 text-center mb-2">
+          <h1 className="text-3xl font-bold font-heading tracking-tight">
+            Create Account
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            Join us and start sharing your feedback
           </p>
         </div>
 
         <Field>
-          <FieldLabel htmlFor="email">Email</FieldLabel>
+          <FieldLabel htmlFor="email" className="text-sm font-medium">
+            Email
+          </FieldLabel>
           <Input
             {...register("email")}
             id="email"
@@ -103,10 +107,11 @@ export function SignupForm({
             required
             autoComplete="email"
             disabled={isPending}
+            className="mt-1.5"
           />
 
           {!errors.email ? (
-            <FieldDescription>
+            <FieldDescription className="text-xs">
               We&apos;ll use this to contact you. We will not share your email
               with anyone else.
             </FieldDescription>
@@ -116,7 +121,9 @@ export function SignupForm({
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="password">Password</FieldLabel>
+          <FieldLabel htmlFor="password" className="text-sm font-medium">
+            Password
+          </FieldLabel>
 
           <PasswordWithEye
             {...register("password")}
@@ -124,10 +131,11 @@ export function SignupForm({
             required
             autoComplete="new-password"
             disabled={isPending}
+            className="mt-1.5"
           />
 
           {!errors.password ? (
-            <FieldDescription>
+            <FieldDescription className="text-xs">
               Must be at least 8 characters long.
             </FieldDescription>
           ) : (
@@ -136,7 +144,12 @@ export function SignupForm({
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
+          <FieldLabel
+            htmlFor="confirm-password"
+            className="text-sm font-medium"
+          >
+            Confirm Password
+          </FieldLabel>
 
           <PasswordWithEye
             {...register("passwordConfirmation")}
@@ -144,19 +157,22 @@ export function SignupForm({
             required
             autoComplete="new-password"
             disabled={isPending}
+            className="mt-1.5"
           />
 
           {!errors.passwordConfirmation ? (
-            <FieldDescription>Please confirm your password.</FieldDescription>
+            <FieldDescription className="text-xs">
+              Please confirm your password.
+            </FieldDescription>
           ) : (
             <FieldError>{errors.passwordConfirmation.message}</FieldError>
           )}
         </Field>
 
-        <Field>
+        <Field className="mt-2">
           <Button
             type="submit"
-            className="w-full transition-all active:scale-95 disabled:pointer-events-none"
+            className="w-full h-11 rounded-xl font-medium"
             disabled={
               isPending ||
               !!errors.email ||
@@ -178,8 +194,14 @@ export function SignupForm({
         <FieldSeparator></FieldSeparator>
 
         <Field>
-          <FieldDescription className="px-6 text-center">
-            Already have an account? <a href="/auth/signin">Sign in</a>
+          <FieldDescription className="text-center text-sm">
+            Already have an account?{" "}
+            <a
+              href="/auth/signin"
+              className="text-primary font-medium hover:text-primary/80 underline-offset-4 hover:underline transition-colors"
+            >
+              Sign in
+            </a>
           </FieldDescription>
         </Field>
       </FieldGroup>

@@ -22,8 +22,9 @@ import { addFeedback } from "@/actions/feedback";
 
 export function AddFeedbackForm({
   className,
+  onSuccess,
   ...props
-}: React.ComponentProps<"form">) {
+}: React.ComponentProps<"form"> & { onSuccess?: () => void }) {
   const [isPending, startTransition] = useTransition();
 
   const {
@@ -59,6 +60,7 @@ export function AddFeedbackForm({
         }
 
         toast.success("Feedback created.");
+        if (onSuccess) onSuccess();
       } catch (error) {
         toast.error("Something went wrong. Please try again.");
       }
@@ -67,17 +69,15 @@ export function AddFeedbackForm({
 
   return (
     <form
-      className={cn("flex flex-col gap-6", className)}
+      className={cn("flex flex-col gap-5", className)}
       onSubmit={handleSubmit(onSubmit)}
       {...props}
     >
       <FieldGroup>
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Add New Feedback</h1>
-        </div>
-
         <Field>
-          <FieldLabel htmlFor="title">Title</FieldLabel>
+          <FieldLabel htmlFor="title" className="text-sm font-medium">
+            Title
+          </FieldLabel>
           <Input
             {...register("title")}
             id="title"
@@ -86,6 +86,7 @@ export function AddFeedbackForm({
             required
             disabled={isPending}
             onChange={() => clearErrors()}
+            className="mt-1.5"
           />
 
           {errors.title && <FieldError>{errors.title.message}</FieldError>}
@@ -93,7 +94,9 @@ export function AddFeedbackForm({
 
         <Field>
           <div className="flex items-center">
-            <FieldLabel htmlFor="description">Description</FieldLabel>
+            <FieldLabel htmlFor="description" className="text-sm font-medium">
+              Description
+            </FieldLabel>
           </div>
 
           <Textarea
@@ -103,6 +106,7 @@ export function AddFeedbackForm({
             disabled={isPending}
             onChange={() => clearErrors()}
             placeholder="Enter your description here..."
+            className="mt-1.5"
           />
 
           {errors.description && (
@@ -110,10 +114,10 @@ export function AddFeedbackForm({
           )}
         </Field>
 
-        <Field>
+        <Field className="mt-2">
           <Button
             type="submit"
-            className="w-full transition-all active:scale-95 disabled:pointer-events-none"
+            className="w-full transition-all active:scale-95 disabled:pointer-events-none h-11 rounded-xl font-medium"
             disabled={isPending || !!errors.title || !!errors.description}
           >
             {isPending ? (
