@@ -71,8 +71,9 @@ export function SignupForm({
           return;
         }
 
-        toast.success("Account created successfully!");
-        router.push("/auth/signup/email-confirmation");
+        toast.success(
+          "We've sent you a confirmation email, please check your inbox.",
+        );
       } catch (error) {
         toast.error("Something went wrong. Please try again.");
       }

@@ -1,5 +1,5 @@
 {
-  "name": "My workflow",
+  "name": "Customer Feedback",
   "nodes": [
     {
       "parameters": {
@@ -34,10 +34,7 @@
       },
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [
-        416,
-        96
-      ],
+      "position": [416, 96],
       "id": "008413ec-aa41-4a60-9ee9-7eabbf796ea6",
       "name": "Low and General feedback",
       "credentials": {
@@ -80,10 +77,7 @@
       },
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [
-        416,
-        -96
-      ],
+      "position": [416, -96],
       "id": "9b47b188-88bc-4da6-aa30-cf7b5454c06c",
       "name": "High and Bug feedback",
       "credentials": {
@@ -101,10 +95,7 @@
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
-      "position": [
-        0,
-        0
-      ],
+      "position": [0, 0],
       "id": "04a41222-1bb2-48b8-bd09-40d335c1cae3",
       "name": "New Feedback trigger",
       "webhookId": "73bddf01-6207-4552-a3f4-e1336b3b1288",
@@ -158,10 +149,7 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [
-        208,
-        0
-      ],
+      "position": [208, 0],
       "id": "93d67691-5c30-430c-80a9-da7b5e38aafe",
       "name": "Error, Bug, Urgent?",
       "alwaysOutputData": true

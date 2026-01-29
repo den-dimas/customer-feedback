@@ -22,7 +22,7 @@ export async function signUp(input: RegisterInput) {
     email: register.data.email,
     password: register.data.password,
     options: {
-      emailRedirectTo: "http://localhost:3000/dashboard",
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_FE_DOMAIN}/auth/confirm`,
     },
   });
 
@@ -56,4 +56,16 @@ export async function signIn(input: LoginInput) {
   }
 
   return Success(data);
+}
+
+export async function signOut() {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.signOut();
+
+  if (error != null) {
+    return Error(error);
+  }
+
+  return Success(null);
 }
